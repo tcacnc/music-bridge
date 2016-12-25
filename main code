@@ -1,0 +1,87 @@
+I#define OUT1A 6
+#define OUT1B 8
+#define OUT2A 5
+#define OUT2B 7
+
+//定义音阶常量
+#define Xa 220
+#define Yi 247 
+#define Do 262  
+#define Re 294  
+#define Mi 330  
+#define Fa 349  
+#define Sol 392  
+#define La 440  
+#define Si 494
+#define Xo 523
+#define Ye 587
+#define Zi 659
+int val=0; 
+//定义引脚
+int buzzerPin1=11;  
+int buzzerPin2=13;  
+const int TrigPin = 2; 
+const int EchoPin = 3; 
+float d; 
+void setup() 
+{  // 初始化串口通信及连接SR04的引脚
+   Serial.begin(115200); 
+   pinMode(TrigPin, OUTPUT); 
+   pinMode(EchoPin, INPUT); 
+   Serial.println("Ultrasonic sensor:");
+  pinMode(OUT1A, OUTPUT);
+  pinMode(OUT1B, OUTPUT);
+  pinMode(OUT2A, OUTPUT);
+  pinMode(OUT2B, OUTPUT);
+  analogWrite(5, 100);
+  analogWrite(6, 200);
+} 
+
+void loop() 
+{ 
+   // 产生一个10us的高脉冲去触发TrigPin 
+   digitalWrite(TrigPin, LOW); 
+   delayMicroseconds(2); 
+   digitalWrite(TrigPin, HIGH); 
+   delayMicroseconds(10);
+   digitalWrite(TrigPin, LOW); 
+   // 计算出距离，并在串口显示
+   d = pulseIn(EchoPin, HIGH) / 58.00;
+   Serial.print(d); 
+   Serial.print("cm"); 
+   Serial.println(); 
+   // 把距离转换成不同频率的声音
+   val=0;
+   if(d<=6)
+     val=Xa;
+   else if(d<=7.5)
+     val=Yi;
+   else if(d<=9)
+     val=Do;
+   else if(d<=10.5)
+     val=Re;
+   else if(d<=12)
+     val=Mi;
+   else if(d<=13.5)
+     val=Fa;
+   else if(d<=15)
+     val=Sol;
+   else if(d<=16.5)
+     val=La;
+   else if(d<=18)
+     val=Si;
+   else if(d<=19.5)
+     val=Xo;
+   else if(d<=21)
+     val=Ye;
+   else if(d<=22.5)
+     val=Zi;
+   if (val)
+   {
+     tone(buzzerPin1,val,400);
+     tone(buzzerPin2,val,400);
+     delay(500);  
+    }
+   else
+     delay(500);
+}
